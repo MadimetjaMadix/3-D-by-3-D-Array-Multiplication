@@ -30,7 +30,6 @@ int* allocateMarix(int number_of_elements)
 	This function (fn) takes a pointer to a matrix and the number of elements.
 	It then populates it with random numbers ranging from 0 to 20.
 */
-
 void populateMatrix(int *matrix, int number_of_elements)
 {
 	for(int i=0; i<number_of_elements; ++i)
@@ -39,6 +38,28 @@ void populateMatrix(int *matrix, int number_of_elements)
 		matrix++;
 	}
 	return;
+}
+
+/*
+	This function returns the mapped position in the 1D array for the element
+	located at the index in the 2D array.
+*/
+int getElementLocation2D(int index[2], int N)
+{
+	int row    = index[0];
+	int column = index[1];
+
+	return ((row*N)+column);
+}
+
+/*
+	This function returns the value stored in the element at the specified index.
+	index is a 1D array with to elements. It contains the desired row and the 
+	desired column.
+*/
+int retrieveElement2D(int* matrix, int index[2], int N)
+{
+	return *(matrix+getElementLocation2D(index, N));
 }
 
 /*
@@ -68,6 +89,28 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	return result;	
 }
 
+int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
+{
+	int* result = allocateMarix(number_of_elements);
+	int total_multiplication_operations = number_of_elements*N;
+	for(int m=0; m<total_multiplication_operations; m++)
+	{
+		int i = m/number_of_elements;
+		int j = m%N;
+		int k = (m/N)%N;
+		
+		int indexA[2] = {i, k}; 
+		int indexB[2] = {k, j};
+		
+		int elementA = retrieveElement2D(matrixA, indexA, N);
+		int elementB = retrieveElement2D(matrixB, indexB, N);
+		
+		int indexC[2] = {i, j};
+		int* total = result+getElementLocation2D(indexC, N);
+		*total+=(elementA*elementB);
+	}
+	return result;
+}
 
 void print2DMatrix(int *matrix, int N)
 {
@@ -84,10 +127,10 @@ void print2DMatrix(int *matrix, int N)
 
 int main()
 {
-
-	int N = 5;
+	int N = 3;
 	int dimension = 2;
-	int number_of_elements = getNumberOfElements( N, dimension);
+	int number_of_elements = getNumberOfElements(N, dimension);
+
 	srand(time(0));
 	
 	printf("Matrix A");
@@ -101,13 +144,16 @@ int main()
 	print2DMatrix(matrixB, N);
 	
 	printf("\n===== Addition Result =====");
-	int *result = rank2TensorAdd(matrixA, matrixB, number_of_elements);
+	int *resultAddition = rank2TensorAdd(matrixA, matrixB, number_of_elements);
+	print2DMatrix(resultAddition, N);
 	
-	print2DMatrix(result, N);
+	printf("\n===== Multiplication Result =====");
+	int *resultMultiplication = rank2TensorMult(matrixA, matrixB, N, number_of_elements);
+	print2DMatrix(resultMultiplication, N);
 	
 	free(matrixA);
 	free(matrixB);
-	free(result);
-	
+	free(resultAddition);
+	free(resultMultiplication);
 	return 0;
 }
