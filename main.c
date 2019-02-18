@@ -63,6 +63,21 @@ int retrieveElement2D(int* matrix, int index[2], int N)
 }
 
 /*
+	This function takes two pointers to matrices and their size.
+	It adds the matrices, element wise.
+*/
+void addMatrice(int *arrayA, int *arrayB,int *result, int number_of_elements)
+{
+	for(int i=0; i<number_of_elements; ++i)
+	{
+		*result = *arrayA + *arrayB;
+		result++;
+		arrayA++;
+		arrayB++;
+	}
+}
+
+/*
 	This function takes two pointers to 2D matrices and their size.
 	It adds the matrices, element wise, and stores the results.
 	The functon returns the result.
@@ -74,13 +89,8 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	int *temp   = result;
 	if (temp != NULL)
 	{ 
-		for(int i=0; i<number_of_elements; ++i)
-		{
-			*temp = *matrixA + *matrixB;
-			temp++;
-			matrixA++;
-			matrixB++;
-		}
+		addMatrice( matrixA, matrixB, temp, number_of_elements);
+
 	}
 	else	
 	{
@@ -88,6 +98,8 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	}
 	return result;	
 }
+
+
 
 int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 {
@@ -112,6 +124,28 @@ int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 	return result;
 }
 
+/*
+	This function takes two pointers to 3D matrices and their size.
+	It adds the matrices, element wise, and stores the results.
+	The functon returns the result.
+*/
+int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
+{
+	
+	int *result = allocateMarix(number_of_elements);
+	int *temp   = result;
+	if (temp != NULL)
+	{ 
+		addMatrice( matrixA, matrixB, temp, number_of_elements);
+
+	}
+	else	
+	{
+		printf("Memory allocation failed.");
+	}
+	return result;	
+}
+
 void print2DMatrix(int *matrix, int N)
 {
 	printf("\n");
@@ -125,6 +159,27 @@ void print2DMatrix(int *matrix, int N)
 	printf("\n");
 }
 
+void print3DMatrix(int *matrix, int N)
+{
+	printf("\n");
+	for(int i=0; i< N*N*N; ++i)
+	{
+		if( i%(N*N) == 0)
+		{
+			printf("\n Layer");
+			printf(" %d ", (i/(N*N)+1));
+			printf("\n");
+		}
+		if( i%N == 0) printf("\n");
+	
+		printf("%d ", *matrix);
+		++matrix;
+		
+
+	}
+	printf("\n");
+}
+
 int main()
 {
 	int N = 3;
@@ -133,27 +188,47 @@ int main()
 
 	srand(time(0));
 	
-	printf("Matrix A");
+	printf("2D Matrix A");
 	int *matrixA = allocateMarix(number_of_elements);
 	populateMatrix(matrixA, number_of_elements);
 	print2DMatrix(matrixA, N);
 	
-	printf("\nMatrix B");
+	printf("\n2D Matrix B");
 	int *matrixB = allocateMarix(number_of_elements);
 	populateMatrix(matrixB, number_of_elements);
 	print2DMatrix(matrixB, N);
 	
-	printf("\n===== Addition Result =====");
+	printf("\n===== 2D Addition Result =====");
 	int *resultAddition = rank2TensorAdd(matrixA, matrixB, number_of_elements);
 	print2DMatrix(resultAddition, N);
 	
-	printf("\n===== Multiplication Result =====");
+	printf("\n===== 2D Multiplication Result =====");
 	int *resultMultiplication = rank2TensorMult(matrixA, matrixB, N, number_of_elements);
 	print2DMatrix(resultMultiplication, N);
+	
+	dimension = 3;
+	number_of_elements = getNumberOfElements(N, dimension);
+
+	printf("\n3D Matrix A");
+	int *matrix3DA = allocateMarix(number_of_elements);
+	populateMatrix(matrix3DA, number_of_elements);
+	print3DMatrix(matrix3DA, N);
+
+	printf("\n3D Matrix B");
+	int *matrix3DB = allocateMarix(number_of_elements);
+	populateMatrix(matrix3DB, number_of_elements);
+	print3DMatrix(matrix3DB, N);
+
+	printf("\n===== 3D Addition Result =====");
+	int *result_3D_Addition = rank3TensorAdd(matrix3DA, matrix3DB, number_of_elements);
+	print3DMatrix(result_3D_Addition, N);
 	
 	free(matrixA);
 	free(matrixB);
 	free(resultAddition);
 	free(resultMultiplication);
+	free(matrix3DA);
+	free(matrix3DB);
+	free(result_3D_Addition);
 	return 0;
 }
