@@ -104,22 +104,29 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 {
 	int* result = allocateMarix(number_of_elements);
-	int total_multiplication_operations = number_of_elements*N;
-	for(int m=0; m<total_multiplication_operations; m++)
+	if(result!=NULL)
 	{
-		int i = m/number_of_elements;
-		int j = m%N;
-		int k = (m/N)%N;
-		
-		int indexA[2] = {i, k}; 
-		int indexB[2] = {k, j};
-		
-		int elementA = retrieveElement2D(matrixA, indexA, N);
-		int elementB = retrieveElement2D(matrixB, indexB, N);
-		
-		int indexC[2] = {i, j};
-		int* total = result+getElementLocation2D(indexC, N);
-		*total+=(elementA*elementB);
+		int total_multiplication_operations = number_of_elements*N;
+		for(int m=0; m<total_multiplication_operations; m++)
+		{
+			int i = m/number_of_elements;
+			int j = m%N;
+			int k = (m/N)%N;
+			
+			int indexA[2] = {i, k}; 
+			int indexB[2] = {k, j};
+			
+			int elementA = retrieveElement2D(matrixA, indexA, N);
+			int elementB = retrieveElement2D(matrixB, indexB, N);
+			
+			int indexC[2] = {i, j};
+			int* total = result+getElementLocation2D(indexC, N);
+			*total+=(elementA*elementB);
+		}
+	}
+	else	
+	{
+		printf("Memory allocation failed.");
 	}
 	return result;
 }
@@ -131,7 +138,6 @@ int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 */
 int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 {
-	
 	int *result = allocateMarix(number_of_elements);
 	int *temp   = result;
 	if (temp != NULL)
