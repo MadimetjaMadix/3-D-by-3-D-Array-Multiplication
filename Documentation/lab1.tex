@@ -1,0 +1,63 @@
+\documentclass[10pt,onecolumn]{article}
+\usepackage[utf8]{inputenc}
+ 
+\pagenumbering{arabic}
+%\usepackage{KJN}
+\usepackage{siunitx}
+\usepackage{graphicx}
+\usepackage{placeins}
+\usepackage{adjustbox}
+\usepackage{tablefootnote}
+\usepackage{mathtools}
+\usepackage[margin=0.75in]{geometry} %This is for all the margins
+
+\def\@maketitle{%
+  \null
+  \vskip 2em%
+  \begin{center}%
+  \let \footnote \thanks
+    {\LARGE \@title \par}%
+    \vskip 1.5em%
+    {\large
+      \lineskip .5em%
+      \begin{tabular}[t]{c}% <------
+        \@author%            <------ Authors
+      \end{tabular}\par}%    <------
+    \vskip 1em%
+  %  {\large \@date}%
+  \end{center}%
+  \par
+  \vskip 1.5em}
+
+\date{23/02/2019}
+
+\title{\vspace{-2.2cm} \textbf{ELEN4020: Data Intensive Computing \\ Laboratory Exercise 1}}
+\author{\begin{tabular}{ll}
+  Lynch Mwaniki & 1043475 \\
+  "" & 1111111 \\
+  "" & 1111111 \\
+\end{tabular}
+ }
+
+
+\begin{document}
+%\centering
+\title{\Large{\textbf{ ELEN4020: Data Intensive Computing \\ }}}
+
+
+\maketitle
+\maketitle
+\thispagestyle{empty}\pagestyle{empty}
+\vspace{-8mm}
+
+\section*{3D Matrix Multiplication}
+A commonly used approach for accessing elements in a multidimensional array involves iterating with a number of nested loops. The number of loops required is equal to the dimensions of the array. This approach is computationally expensive but allows accessing the elements of a static array. Adapting this method for dynamic arrays raises the computation time and space complexity and is difficult to implement.\\
+
+\noindent mnb
+\noindent mmn
+
+\subsection*{rank3TensorMult}
+
+\subsection*{sd}
+
+\end{document}
