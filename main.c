@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <time.h>
 
-
 /*
 	This function takes in the size of the matrix and its dimension; 
 	either 2 for 2D or 3 for 3D.
@@ -141,7 +140,6 @@ int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	if (temp != NULL)
 	{ 
 		addMatrice( matrixA, matrixB, temp, number_of_elements);
-
 	}
 	else	
 	{
@@ -158,18 +156,25 @@ int *rank3TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 
 	if (temp != NULL)
 	{ 
+		int elements2D = N*N;
 		for(int i=0;i<N;++i)
 		{
-			 int elements2D = N*N;
-			 int* result_2D = rank2TensorMult(matrixA+startPos, matrixB+startPos, N, elements2D);
-
-			 for(int i = 0; i<elements2D; i++)
-			 {
-				  *temp = *result_2D;
-				   temp++;
-				   result_2D++;
-			 }
-		 	 startPos+= elements2D;
+			 int* result_2D = rank2TensorMult(matrixA+startPos, matrixB+startPos, 
+			 								   N, elements2D);
+			 										          
+			// Copy elements:
+			for(int i = 0; i<elements2D; i++)
+			{
+				*temp = *result_2D;
+				temp++;
+				result_2D++;
+			}
+			
+			// Change starting position:
+		 	startPos+= elements2D;
+		 	
+		 	result_2D = result_2D-elements2D;//reset position to beginning of array
+		 	free(result_2D);// free memory
 		}
 
 	}
@@ -189,7 +194,7 @@ void print2DMatrix(int *matrix, int N)
 	{
 		if( i%N == 0) printf("\n");
 	
-		printf("%d ", *matrix);
+		printf("%4d ", *matrix);
 		++matrix;
 	}
 	printf("\n");
@@ -202,76 +207,120 @@ void print3DMatrix(int *matrix, int N)
 	{
 		if( i%(N*N) == 0)
 		{
-			printf("\n Layer");
+			printf("\n\nLayer");
 			printf(" %d ", (i/(N*N)+1));
-			printf("\n");
 		}
+		
 		if( i%N == 0) printf("\n");
 	
-		printf("%d ", *matrix);
+		printf("%4d ", *matrix);
 		++matrix;
-		
-
 	}
 	printf("\n");
 }
 
+void printRows(int rowA[], int rowB[], int N)
+{
+	for(int j = 0; j<N; j++) printf("%4d ", rowA[j]);
+	printf("\t");
+	for(int j = 0; j<N; j++) printf("%4d ", rowB[j]);
+}
+
+void printMatrices(int* matrixA, int* matrixB, int N, int dimensions, int number_of_elements)
+{
+	printf("\n");
+	int rowA[N];
+	int rowB[N];
+	int column_counter = 0;
+	int number_of_2D_elements = N*N;
+	int number_tabs = (N/2)+1;
+	
+	printf("Matrix A");
+	for(int i = 0; i<number_tabs; i++) printf("\t");
+	printf("Matrix B\n");
+	
+	for(int i = 0; i< number_of_elements; i++)
+	{ 
+		if( i%number_of_2D_elements-1 == 0)
+		{	
+			// Print Layer number heading:
+			for(int j = 0; j<2; j++)
+			{
+				if(j==0) printf("\n");
+				printf("Layer");
+				printf(" %d ", (i/(number_of_2D_elements)+1));
+				if(j==0)
+				{
+					for(int k = 0; k<number_tabs; k++) printf("\t");
+				}
+			}
+			printf("\n");
+		}
+		
+		// Print Row:
+		if(column_counter == N)
+		{
+			printRows(rowA, rowB, N);
+			printf("\n");
+			column_counter = 0;
+		}
+		
+		rowA[column_counter] = *matrixA;		
+		rowB[column_counter] = *matrixB;	
+		++matrixA;
+		++matrixB;
+		++column_counter;
+	}
+	
+	printRows(rowA, rowB, N); // Print last row
+}
 
 int main()
 {
-	int N = 3;
+	int N = 4;
 	int dimension = 2;
 	int number_of_elements = getNumberOfElements(N, dimension);
 
 	srand(time(0));
 	
-	printf("2D Matrix A");
 	int *matrixA = allocateMarix(number_of_elements);
 	populateMatrix(matrixA, number_of_elements);
-	print2DMatrix(matrixA, N);
 	
-	printf("\n2D Matrix B");
 	int *matrixB = allocateMarix(number_of_elements);
 	populateMatrix(matrixB, number_of_elements);
-	print2DMatrix(matrixB, N);
 	
-	printf("\n===== 2D Addition Result =====");
+	// Print matrices:
+	printMatrices(matrixA, matrixB, N, dimension, number_of_elements);
+	
+	printf("\n----------- 2D Addition Result ----------- ");
 	int *resultAddition = rank2TensorAdd(matrixA, matrixB, number_of_elements);
 	print2DMatrix(resultAddition, N);
 	
-	printf("\n===== 2D Multiplication Result =====");
+	printf("\n----------- 2D Multiplication Result -----------");
 	int *resultMultiplication = rank2TensorMult(matrixA, matrixB, N, number_of_elements);
 	print2DMatrix(resultMultiplication, N);
-
-
 
 	dimension = 3;
 	number_of_elements = getNumberOfElements(N, dimension);
 
-	printf("\n3D Matrix A");
+	printf("\n=========================  3D  ========================= ");
 	int *matrix3DA = allocateMarix(number_of_elements);
 	populateMatrix(matrix3DA, number_of_elements);
-	print3DMatrix(matrix3DA, N);
 
-	printf("\n3D Matrix B");
 	int *matrix3DB = allocateMarix(number_of_elements);
 	populateMatrix(matrix3DB, number_of_elements);
-	print3DMatrix(matrix3DB, N);
+	
+	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
 
-	printf("\n===== 3D Addition Result =====");
+	printf("\n------------------ 3D Addition Result ------------------ ");
 	int *result_3D_Addition = rank3TensorAdd(matrix3DA, matrix3DB, number_of_elements);
 	print3DMatrix(result_3D_Addition, N);
 
-
-
-	printf("\n======3D Multiplication=========");
-	int* res3D_Mult = rank3TensorMult(matrix3DA, matrix3DB, N, number_of_elements);
-	printf("\n3D Matrix A");
-	print3DMatrix(matrix3DA, N);
-	printf("\n3D Matrix B");
-	print3DMatrix(matrix3DB, N);
-	printf("\n===== 3D Multiplication Result =====");
-	print3DMatrix(res3D_Mult, N);
+	printf("\n------------------ 3D Multiplication ------------------ ");
+	int* result_3D_Multiplication = rank3TensorMult(matrix3DA, matrix3DB, N, number_of_elements);
+	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
+	printf("\n--------------- 3D Multiplication Result --------------- ");
+	print3DMatrix(result_3D_Multiplication, N);
 
 
 	free(matrixA);
@@ -281,6 +330,7 @@ int main()
 	free(matrix3DA);
 	free(matrix3DB);
 	free(result_3D_Addition);
-	free(res3D_Mult);
+	free(result_3D_Multiplication);
+	
 	return 0;
 }
