@@ -233,7 +233,7 @@ void printMatrices(int* matrixA, int* matrixB, int N, int dimensions, int number
 	int rowB[N];
 	int column_counter = 0;
 	int number_of_2D_elements = N*N;
-	int number_tabs = (N/2)+1;
+	int number_tabs = (N/2)+2;
 	
 	printf("Matrix A");
 	for(int i = 0; i<number_tabs; i++) printf("\t");
@@ -275,9 +275,8 @@ void printMatrices(int* matrixA, int* matrixB, int N, int dimensions, int number
 	printRows(rowA, rowB, N); // Print last row
 }
 
-int main()
+void run(int N)
 {
-	int N = 4;
 	int dimension = 2;
 	int number_of_elements = getNumberOfElements(N, dimension);
 
@@ -331,6 +330,17 @@ int main()
 	free(matrix3DB);
 	free(result_3D_Addition);
 	free(result_3D_Multiplication);
+}
+
+int main()
+{
+	int N = 10;
+	printf("\n=======================================  N=10  ====================================\n");
+	run(N);
+	N = 20;
+	printf("\n==========================================================  N=20  ===========================================================\n");
+	run(N);
+	
 	
 	return 0;
 }
