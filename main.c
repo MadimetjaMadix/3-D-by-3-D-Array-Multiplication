@@ -99,8 +99,6 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	return result;	
 }
 
-
-
 int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 {
 	int* result = allocateMarix(number_of_elements);
@@ -152,6 +150,38 @@ int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	return result;	
 }
 
+int *rank3TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
+{
+	int startPos = 0;
+	int* result  = allocateMarix(number_of_elements);
+	int* temp = result;
+
+	if (temp != NULL)
+	{ 
+		for(int i=0;i<N;++i)
+		{
+			 int elements2D = N*N;
+			 int* result_2D = rank2TensorMult(matrixA+startPos, matrixB+startPos, N, elements2D);
+
+			 for(int i = 0; i<elements2D; i++)
+			 {
+				  *temp = *result_2D;
+				   temp++;
+				   result_2D++;
+			 }
+		 	 startPos+= elements2D;
+		}
+
+	}
+	else	
+	{
+		printf("Memory allocation failed.");
+	}
+
+	return result;	
+}
+
+
 void print2DMatrix(int *matrix, int N)
 {
 	printf("\n");
@@ -186,6 +216,7 @@ void print3DMatrix(int *matrix, int N)
 	printf("\n");
 }
 
+
 int main()
 {
 	int N = 3;
@@ -211,7 +242,9 @@ int main()
 	printf("\n===== 2D Multiplication Result =====");
 	int *resultMultiplication = rank2TensorMult(matrixA, matrixB, N, number_of_elements);
 	print2DMatrix(resultMultiplication, N);
-	
+
+
+
 	dimension = 3;
 	number_of_elements = getNumberOfElements(N, dimension);
 
@@ -228,7 +261,19 @@ int main()
 	printf("\n===== 3D Addition Result =====");
 	int *result_3D_Addition = rank3TensorAdd(matrix3DA, matrix3DB, number_of_elements);
 	print3DMatrix(result_3D_Addition, N);
-	
+
+
+
+	printf("\n======3D Multiplication=========");
+	int* res3D_Mult = rank3TensorMult(matrix3DA, matrix3DB, N, number_of_elements);
+	printf("\n3D Matrix A");
+	print3DMatrix(matrix3DA, N);
+	printf("\n3D Matrix B");
+	print3DMatrix(matrix3DB, N);
+	printf("\n===== 3D Multiplication Result =====");
+	print3DMatrix(res3D_Mult, N);
+
+
 	free(matrixA);
 	free(matrixB);
 	free(resultAddition);
@@ -236,5 +281,6 @@ int main()
 	free(matrix3DA);
 	free(matrix3DB);
 	free(result_3D_Addition);
+	free(res3D_Mult);
 	return 0;
 }
