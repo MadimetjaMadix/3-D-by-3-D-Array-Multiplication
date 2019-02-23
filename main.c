@@ -275,8 +275,34 @@ void printMatrices(int* matrixA, int* matrixB, int N, int dimensions, int number
 	printRows(rowA, rowB, N); // Print last row
 }
 
-void run(int N)
+void printHeader()
 {
+	printf("       * ELEN4020A Data Intensive Computing: Laboratory 1 * \n");
+    printf("       ****************************************************\n");
+    printf("             +--------------------+----------------+ \n");
+    printf("             |    Student Name    | Student Number | \n");
+    printf("             +--------------------+----------------+ \n");
+    printf("             | Lynch Mwaniki      |        1043475 | \n");
+    printf("             | Madimetja Sethosa  |        1076467 | \n");
+    printf("             | Teboho Matsheke    |        1157717 | \n");
+    printf("             +--------------------+----------------+ \n");
+}
+
+void printMatrixSize(int N)
+{
+	printf("\n=========================================");
+	printf("=========================================");
+	printf("=====================================\n\n");
+	printf("                                                         ");
+	printf("N=%d", N);
+	printf("                                                         \n");
+	printf("\n=========================================");
+	printf("=========================================");
+	printf("=====================================\n");
+} 
+
+void run(int N)
+{	
 	int dimension = 2;
 	int number_of_elements = getNumberOfElements(N, dimension);
 
@@ -291,18 +317,21 @@ void run(int N)
 	// Print matrices:
 	printMatrices(matrixA, matrixB, N, dimension, number_of_elements);
 	
-	printf("\n----------- 2D Addition Result ----------- ");
+	printf("\n\n------------------------------------");
+	printf(" 2D Addition Result ------------------------------------ ");
 	int *resultAddition = rank2TensorAdd(matrixA, matrixB, number_of_elements);
 	print2DMatrix(resultAddition, N);
 	
-	printf("\n----------- 2D Multiplication Result -----------");
+	printf("\n\n------------------------------------ ");
+	printf(" 2D Multiplication Result ------------------------------------ ");
 	int *resultMultiplication = rank2TensorMult(matrixA, matrixB, N, number_of_elements);
 	print2DMatrix(resultMultiplication, N);
 
 	dimension = 3;
 	number_of_elements = getNumberOfElements(N, dimension);
 
-	printf("\n=========================  3D  ========================= ");
+	printf("\n\n ==================================================  3D  ");
+	printf(" ================================================== ");
 	int *matrix3DA = allocateMarix(number_of_elements);
 	populateMatrix(matrix3DA, number_of_elements);
 
@@ -311,14 +340,18 @@ void run(int N)
 	
 	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
 
-	printf("\n------------------ 3D Addition Result ------------------ ");
+	printf("\n\n ------------------------------------ 3D Addition Result ");
+	printf(" ------------------------------------ ");
 	int *result_3D_Addition = rank3TensorAdd(matrix3DA, matrix3DB, number_of_elements);
 	print3DMatrix(result_3D_Addition, N);
 
-	printf("\n------------------ 3D Multiplication ------------------ ");
+	printf("\n\n ------------------------------------ ");
+	printf("3D Multiplication ------------------------------------ ");
 	int* result_3D_Multiplication = rank3TensorMult(matrix3DA, matrix3DB, N, number_of_elements);
 	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
-	printf("\n--------------- 3D Multiplication Result --------------- ");
+	
+	printf("\n\n ------------------------------------ ");
+	printf(" 3D Multiplication Result ------------------------------------ ");
 	print3DMatrix(result_3D_Multiplication, N);
 
 
@@ -334,13 +367,16 @@ void run(int N)
 
 int main()
 {
+	// Print Header:
+	printHeader();
+	
 	int N = 10;
-	printf("\n=======================================  N=10  ====================================\n");
-	run(N);
-	N = 20;
-	printf("\n==========================================================  N=20  ===========================================================\n");
+	printMatrixSize(N);
 	run(N);
 	
+	N = 20;
+	printMatrixSize(N);
+	run(N);
 	
 	return 0;
 }
