@@ -28,6 +28,10 @@ int* allocateMarix(int number_of_elements)
 /*
 	This function (fn) takes a pointer to a matrix and the number of elements.
 	It then populates it with random numbers ranging from 0 to 20.
+	Because the matrix is represented as a 1 Dimensional Array in memory, as the 
+	function increments the pointer it stores the random number generated at the
+	memory address being pointed to. The pointer is incremented n times, where 
+	n = number of elements.
 */
 void populateMatrix(int *matrix, int number_of_elements)
 {
@@ -79,7 +83,7 @@ void addMatrice(int *arrayA, int *arrayB,int *result, int number_of_elements)
 /*
 	This function takes two pointers to 2D matrices and their size.
 	It adds the matrices, element wise, and stores the results.
-	The functon returns the result.
+	The function returns the result.
 */
 int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 {
@@ -98,6 +102,12 @@ int *rank2TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	return result;	
 }
 
+/* 
+	This function takes two pointers to 2D matrices, the number of elements (N)
+	in each dimension and the total number of elements in the matrix.
+	The function implements row-column wise matrix multiplication.
+	A pointer to the result of the matrix multiplication is returned.
+ */
 int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 {
 	int* result = allocateMarix(number_of_elements);
@@ -131,7 +141,7 @@ int* rank2TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 /*
 	This function takes two pointers to 3D matrices and their size.
 	It adds the matrices, element wise, and stores the results.
-	The functon returns the result.
+	The function returns the result.
 */
 int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 {
@@ -148,6 +158,15 @@ int *rank3TensorAdd(int *matrixA, int *matrixB, int number_of_elements)
 	return result;	
 }
 
+/* 
+	This function takes two pointers to 3D matrices, the number of elements (N)
+	in each dimension and the total number of elements in the matrix.
+	The function first splits the 3D arrays into 2D layers and multiplies each 
+	corresponding 2D layer. The rank2TensorMult function is then called.
+	The result from the 2D multiplication is copied into 
+	the memory allocated for the answer.
+	A pointer to the result of the 3D matrix multiplication is returned.
+ */
 int *rank3TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 {
 	int startPos = 0;
@@ -186,7 +205,9 @@ int *rank3TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
 	return result;	
 }
 
-
+/*
+	Prints out a 2D matrix.
+ */
 void print2DMatrix(int *matrix, int N)
 {
 	printf("\n");
@@ -200,6 +221,9 @@ void print2DMatrix(int *matrix, int N)
 	printf("\n");
 }
 
+/*
+	Prints out a 3D matrix, layer by layer.
+ */
 void print3DMatrix(int *matrix, int N)
 {
 	printf("\n");
@@ -219,6 +243,9 @@ void print3DMatrix(int *matrix, int N)
 	printf("\n");
 }
 
+/*
+	Prints out a row of numbers.
+ */
 void printRows(int rowA[], int rowB[], int N)
 {
 	for(int j = 0; j<N; j++) printf("%4d ", rowA[j]);
@@ -226,7 +253,10 @@ void printRows(int rowA[], int rowB[], int N)
 	for(int j = 0; j<N; j++) printf("%4d ", rowB[j]);
 }
 
-void printMatrices(int* matrixA, int* matrixB, int N, int dimensions, int number_of_elements)
+/*
+	Prints out two matrices of the same dimension.
+ */
+void printMatrices(int* matrixA, int* matrixB, int N, int number_of_elements)
 {
 	printf("\n");
 	int rowA[N];
@@ -315,7 +345,7 @@ void run(int N)
 	populateMatrix(matrixB, number_of_elements);
 	
 	// Print matrices:
-	printMatrices(matrixA, matrixB, N, dimension, number_of_elements);
+	printMatrices(matrixA, matrixB, N, number_of_elements);
 	
 	printf("\n\n------------------------------------");
 	printf(" 2D Addition Result ------------------------------------ ");
@@ -338,7 +368,7 @@ void run(int N)
 	int *matrix3DB = allocateMarix(number_of_elements);
 	populateMatrix(matrix3DB, number_of_elements);
 	
-	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
+	printMatrices(matrix3DA, matrix3DB, N, number_of_elements);
 
 	printf("\n\n ------------------------------------ 3D Addition Result ");
 	printf(" ------------------------------------ ");
@@ -348,7 +378,7 @@ void run(int N)
 	printf("\n\n ------------------------------------ ");
 	printf("3D Multiplication ------------------------------------ ");
 	int* result_3D_Multiplication = rank3TensorMult(matrix3DA, matrix3DB, N, number_of_elements);
-	printMatrices(matrix3DA, matrix3DB, N, dimension, number_of_elements);
+	printMatrices(matrix3DA, matrix3DB, N, number_of_elements);
 	
 	printf("\n\n ------------------------------------ ");
 	printf(" 3D Multiplication Result ------------------------------------ ");
