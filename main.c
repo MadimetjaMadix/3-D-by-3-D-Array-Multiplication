@@ -210,15 +210,20 @@ int *rank3TensorMult(int *matrixA, int *matrixB, int N, int number_of_elements)
  */
 void print2DMatrix(int *matrix, int N)
 {
-	printf("\n");
-	for(int i=0; i< N*N; ++i)
-	{
-		if( i%N == 0) printf("\n");
+	if(matrix != NULL)
+	{	
+		printf("\n");
+		for(int i=0; i< N*N; ++i)
+		{
+			if( i%N == 0) printf("\n");
 	
-		printf("%4d ", *matrix);
-		++matrix;
-	}
-	printf("\n");
+			printf("%4d ", *matrix);
+			++matrix;
+		}
+		printf("\n");
+
+	}else printf(" The Matrix is empty");
+	
 }
 
 /*
@@ -226,21 +231,24 @@ void print2DMatrix(int *matrix, int N)
  */
 void print3DMatrix(int *matrix, int N)
 {
-	printf("\n");
-	for(int i=0; i< N*N*N; ++i)
+	if(matrix != NULL)
 	{
-		if( i%(N*N) == 0)
+		printf("\n");
+		for(int i=0; i< N*N*N; ++i)
 		{
-			printf("\n\nLayer");
-			printf(" %d ", (i/(N*N)+1));
-		}
+			if( i%(N*N) == 0)
+			{
+				printf("\n\nLayer");
+				printf(" %d ", (i/(N*N)+1));
+			}
 		
-		if( i%N == 0) printf("\n");
+			if( i%N == 0) printf("\n");
 	
-		printf("%4d ", *matrix);
-		++matrix;
-	}
-	printf("\n");
+			printf("%4d ", *matrix);
+			++matrix;
+		}
+		printf("\n");
+	}else printf(" The Matrix is empty");
 }
 
 /*
@@ -258,51 +266,55 @@ void printRows(int rowA[], int rowB[], int N)
  */
 void printMatrices(int* matrixA, int* matrixB, int N, int number_of_elements)
 {
-	printf("\n");
-	int rowA[N];
-	int rowB[N];
-	int column_counter = 0;
-	int number_of_2D_elements = N*N;
-	int number_tabs = (N/2)+2;
+
+	if(matrixA != NULL && matrixB != NULL)
+	{
+		printf("\n");
+		int rowA[N];
+		int rowB[N];
+		int column_counter = 0;
+		int number_of_2D_elements = N*N;
+		int number_tabs = (N/2)+2;
 	
-	printf("Matrix A");
-	for(int i = 0; i<number_tabs; i++) printf("\t");
-	printf("Matrix B\n");
+		printf("Matrix A");
+		for(int i = 0; i<number_tabs; i++) printf("\t");
+		printf("Matrix B\n");
 	
-	for(int i = 0; i< number_of_elements; i++)
-	{ 
-		if( i%number_of_2D_elements-1 == 0)
-		{	
-			// Print Layer number heading:
-			for(int j = 0; j<2; j++)
-			{
-				if(j==0) printf("\n");
-				printf("Layer");
-				printf(" %d ", (i/(number_of_2D_elements)+1));
-				if(j==0)
+		for(int i = 0; i< number_of_elements; i++)
+		{ 
+			if( i%number_of_2D_elements-1 == 0)
+			{	
+				// Print Layer number heading:
+				for(int j = 0; j<2; j++)
 				{
-					for(int k = 0; k<number_tabs; k++) printf("\t");
+					if(j==0) printf("\n");
+					printf("Layer");
+					printf(" %d ", (i/(number_of_2D_elements)+1));
+					if(j==0)
+					{
+						for(int k = 0; k<number_tabs; k++) printf("\t");
+					}
 				}
+				printf("\n");
 			}
-			printf("\n");
-		}
 		
-		// Print Row:
-		if(column_counter == N)
-		{
-			printRows(rowA, rowB, N);
-			printf("\n");
-			column_counter = 0;
-		}
+			// Print Row:
+			if(column_counter == N)
+			{
+				printRows(rowA, rowB, N);
+				printf("\n");
+				column_counter = 0;
+			}
 		
-		rowA[column_counter] = *matrixA;		
-		rowB[column_counter] = *matrixB;	
-		++matrixA;
-		++matrixB;
-		++column_counter;
-	}
+			rowA[column_counter] = *matrixA;		
+			rowB[column_counter] = *matrixB;	
+			++matrixA;
+			++matrixB;
+			++column_counter;
+		}
 	
-	printRows(rowA, rowB, N); // Print last row
+		printRows(rowA, rowB, N); // Print last row
+	}else printf(" One of the Matrices is empty");
 }
 
 void printHeader()
