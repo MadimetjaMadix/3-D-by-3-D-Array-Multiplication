@@ -148,13 +148,15 @@ In order to simplify the 3D matrix multiplication an expansion is made on the 2d
         { 
             results2D = rank2TensorMult(matrix A+startPos, matrix B+startPos, N, elements2D)
         
-            \For{}
+            \For{i=0 to elements2D}
             {
                 results3D = results2D\\
-                results2d++; results3++;
+                results2D++;\\
+                results3D++;
                 
             }
-            startPos+=elements2D;
+            startPos += elements2D;\\
+            results2D = results2D - elements2D;
         }%for
         \Return result3D 
     \end{algorithm}
